@@ -3,6 +3,7 @@ import random
 
 st.title("✂️ 가위바위보 게임")
 
+
 options = ["가위", "바위", "보"]
 
 if "user_score" not in st.session_state:
@@ -32,6 +33,8 @@ if st.button("선택!"):
 if st.button("점수 초기화"):
     st.session_state.user_score = 0
     st.session_state.comp_score = 0
+
+
 
 
 

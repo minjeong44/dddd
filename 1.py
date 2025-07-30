@@ -1,16 +1,18 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
 
-st.title("🎨 그라데이션 배경 만들기")
+st.title("실시간 클릭 누적 그래프")
 
-color1 = st.color_picker('시작 색상', '#ff0000')
-color2 = st.color_picker('끝 색상', '#0000ff')
+if "clicks" not in st.session_state:
+    st.session_state.clicks = []
 
-st.markdown(
-    f"""
-    <div style="width: 100%; height: 200px;
-         background: linear-gradient(to right, {color1}, {color2});
-         border-radius: 10px; border: 1px solid #ccc;">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+if st.button("한 본 눌러볼까?"):
+    st.session_state.clicks.append(len(st.session_state.clicks) +1),
+
+df = pd.DataFrame({
+    "횟수": range(1, len(st.session_state.clicks) +1),
+    "값": st.session_state.clicks
+})
+
+st.line_chart(df.set_index("횟수"))

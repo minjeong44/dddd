@@ -7,7 +7,7 @@ st.title("실시간 클릭 누적 그래프")
 if "clicks" not in st.session_state:
     st.session_state.clicks = []
 
-if st.button("한 본 눌러볼까?"):
+if st.button("한 번 눌러볼까?"):
     st.session_state.clicks.append(len(st.session_state.clicks) +1),
 
 df = pd.DataFrame({

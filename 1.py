@@ -12,7 +12,7 @@ if "secret" not in st.session_state:
 if st.button("시작하기"):
     st.write(f"숫자를 외우세요!: **{st.session_state.secret}**")
     time.sleep(3)
-    st.experimental_rerun()
+    st.rerun()
 
 # 숫자 입력 받고 정답 확인
 guess = st.text_input("기억나는 숫자를 입력하세요:")

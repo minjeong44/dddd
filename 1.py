@@ -2,22 +2,33 @@ import streamlit as st
 import random
 import time
 
-st.title("🧠 기억력 테스트")
+st.title("🧠 기억력 챌린지: 숫자 시퀀스")
 
-# 처음 실행될 때 비밀 숫자 설정
-if "secret" not in st.session_state:
-    st.session_state.secret = random.randint(100, 999)
+# 숫자 개수 선택
+num_digits = st.slider("숫자 개수 선택 (난이도)", 3, 7, 4)
 
-# 시작 버튼을 누르면 숫자 보여주고 3초 후 리렌더링
+# 시퀀스 저장
+if "sequence" not in st.session_state:
+    st.session_state.sequence = [random.randint(10, 99) for _ in range(num_digits)]
+
+# 시작 버튼
 if st.button("시작하기"):
-    st.write(f"숫자를 외우세요!: **{st.session_state.secret}**")
+    st.write("숫자들을 외우세요! (3초 후 사라집니다)")
+    st.write("👉 ", "  ".join(str(n) for n in st.session_state.sequence))
     time.sleep(3)
     st.rerun()
 
-# 숫자 입력 받고 정답 확인
-guess = st.text_input("기억나는 숫자를 입력하세요:")
+# 사용자 입력
+guess = st.text_input(f"{num_digits}개의 숫자를 순서대로 입력하세요 (예: 12 45 78 91):")
+
 if guess:
-    if guess == str(st.session_state.secret):
-        st.success("정답! 🎉 잘 기억했어요.")
-    else:
-        st.error(f"❌ 틀림! 정답은 {st.session_state.secret}입니다.")
+    # 입력값을 리스트로 변환
+    try:
+        guess_list = list(map(int, guess.strip().split()))
+        if guess_list == st.session_state.sequence:
+            st.success("🎉 정답! 완벽하게 기억했어요.")
+        else:
+            st.error(f"❌ 틀렸어요! 정답은 {' '.join(map(str, st.session_state.sequence))}")
+    except:
+        st.warning("⚠️ 공백으로 숫자를 구분해서 입력해주세요.")
+

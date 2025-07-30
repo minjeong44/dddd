@@ -1,18 +1,20 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
+import random
+import time
 
-st.title("실시간 클릭 누적 그래프")
+st.title("기억력 테스트")
 
-if "clicks" not in st.session_state:
-    st.session_state.clicks = []
+if "secret" not in st.session_state:
+    st.session_state.secret = random.randint(100, 999)
 
-if st.button("한 번 눌러볼까?"):
-    st.session_state.clicks.append(len(st.session_state.clicks) +1),
+if st.button("시작하기"):
+    st.write(f"숫자를 외우세요!: **{st.session_state.secret}**")
+    time.sleep(3)
+    st.experimental_rerun()
 
-df = pd.DataFrame({
-    "횟수": range(1, len(st.session_state.clicks) +1),
-    "값": st.session_state.clicks
-})
-
-st.line_chart(df.set_index("횟수"))
+guess = st.text_input("기억나는 숫자를 입력하세요:")
+if guess:
+    if guess == str(st.session_state.secret):
+        st.success("정답")
+else:
+        st.error(f"틀림 정답은 {st.session_state.secret}이다")

@@ -1,39 +1,37 @@
 import streamlit as st
 import random
-import time
 
-st.title("🧠 기억력 챌린지: 숫자 시퀀스")
+st.title("✂️ 가위바위보 게임")
 
-# 난이도 조절용 슬라이더
-num_digits = st.slider("숫자 개수 선택 (난이도)", 3, 7, 4)
+options = ["가위", "바위", "보"]
 
-# 시작 버튼 누르면 새로운 숫자 시퀀스를 생성
-if st.button("시작하기"):
-    st.session_state.sequence = [random.randint(10, 99) for _ in range(num_digits)]
-    st.session_state.show_sequence = True
-    st.rerun()
+if "user_score" not in st.session_state:
+    st.session_state.user_score = 0
+if "comp_score" not in st.session_state:
+    st.session_state.comp_score = 0
 
-# 숫자 시퀀스 보여주기 (3초간)
-if st.session_state.get("show_sequence", False):
-    st.write("숫자들을 외우세요! (3초 후 사라집니다)")
-    st.write("👉", "  ".join(str(n) for n in st.session_state.sequence))
-    time.sleep(3)
-    st.session_state.show_sequence = False
-    st.rerun()
+user_choice = st.selectbox("가위, 바위, 보 중 선택하세요", options)
 
-# 사용자 입력받기
-guess = st.text_input(f"{num_digits}개의 숫자를 순서대로 입력하세요 (예: 12 45 78 91):")
+if st.button("선택!"):
+    comp_choice = random.choice(options)
+    st.write(f"컴퓨터 선택: {comp_choice}")
 
-# 정답 체크
-if guess and "sequence" in st.session_state:
-    try:
-        guess_list = list(map(int, guess.strip().split()))
-        correct = st.session_state.sequence
-        if guess_list == correct:
-            st.success("🎉 정답! 완벽하게 기억했어요.")
-        else:
-            st.error(f"❌ 틀렸어요! 정답은 {' '.join(map(str, correct))}")
-    except:
-        st.warning("⚠️ 공백으로 숫자를 구분해서 입력해주세요.")
+    if user_choice == comp_choice:
+        st.write("무승부!")
+    elif (user_choice == "가위" and comp_choice == "보") or \
+         (user_choice == "바위" and comp_choice == "가위") or \
+         (user_choice == "보" and comp_choice == "바위"):
+        st.write("🎉 당신이 이겼습니다!")
+        st.session_state.user_score += 1
+    else:
+        st.write("😢 컴퓨터가 이겼습니다!")
+        st.session_state.comp_score += 1
+
+    st.write(f"현재 점수 - 당신: {st.session_state.user_score} | 컴퓨터: {st.session_state.comp_score}")
+
+if st.button("점수 초기화"):
+    st.session_state.user_score = 0
+    st.session_state.comp_score = 0
+
 
 
